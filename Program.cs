@@ -32,6 +32,8 @@ namespace pkcs11int
     {
         public static void Main(string[] args)
         {
+            rawSign();
+            return;
             showCerts();
             return;
             _02_FindAllObjectsTest();
@@ -134,27 +136,126 @@ namespace pkcs11int
 
             return builder.ToString();
         }
+
+        public static void rawSign()
+        {
+            X509CertificateParser _x509CertificateParser = new X509CertificateParser();
+
+            using (IPkcs11Library pkcs11Library = Settings.Factories.Pkcs11LibraryFactory.LoadPkcs11Library(Settings.Factories, Settings.Pkcs11LibraryPath, Settings.AppType))
+            {
+                // Find first slot with token present
+                ISlot slot = Helpers.GetUsableSlot(pkcs11Library);
+                // Open RW session
+                using (ISession session = slot.OpenSession(SessionType.ReadWrite))
+                {
+                    // Login as normal user
+                    session.Login(CKU.CKU_USER, Settings.NormalUserPin);
+
+                    List<IObjectAttribute> objectAttributes = new List<IObjectAttribute>();
+                    objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CLASS, CKO.CKO_PRIVATE_KEY));
+                    objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_LABEL, UTF8Encoding.UTF8.GetBytes("Razi-Key")));
+
+                    //objectAttributes.Add(new ObjectAttribute(CKA.CKA_LABEL, UTF8Encoding.UTF8.GetBytes("Certificat d'Authentification CPS")));
+                    //CurrentSession.FindObjectsInit(objectAttributes);
+                    var privateKey = session.FindAllObjects(objectAttributes).FirstOrDefault();
+
+                    var signature = session.Sign(session.Factories.MechanismFactory.Create(CKM.CKM_SHA1_RSA_PKCS), privateKey, Encoding.UTF8.GetBytes("Razi"));
+                    var result = ConvertUtils.BytesToBase64String(signature);
+
+
+
+
+
+                    List<IObjectAttribute> objectAttributes2 = new List<IObjectAttribute>();
+                    objectAttributes2.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CLASS, CKO.CKO_CERTIFICATE));
+                    objectAttributes2.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_PRIVATE, false));
+                    objectAttributes2.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_TOKEN, true));
+                    //objectAttributes.Add(new ObjectAttribute(CKA.CKA_LABEL, UTF8Encoding.UTF8.GetBytes("Certificat d'Authentification CPS")));
+                    //CurrentSession.FindObjectsInit(objectAttributes);
+                    var certificate = session.FindAllObjects(objectAttributes2).FirstOrDefault();
+                    var oAttriVal = session.GetAttributeValue(certificate, new List<CKA>() { CKA.CKA_VALUE }).FirstOrDefault();
+                    var oResult = oAttriVal.GetValueAsByteArray();
+                    X509Certificate bcCert = _x509CertificateParser.ReadCertificate(oResult);
+
+                    var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(bcCert.GetEncoded());
+
+                    File.WriteAllText("my-cert.pem", ExportToPEM(cert));
+                    var signer = SignerUtilities.GetSigner("SHA1withRSA");
+                    //var signer = SignerUtilities.GetSigner(new DerObjectIdentifier(OID.PKCS7IdSignedData));
+                    signer.Init(false, bcCert.GetPublicKey());
+                    signer.BlockUpdate(Encoding.UTF8.GetBytes("Razi"), 0, 4);
+
+                    var er = signer.VerifySignature(signature);
+
+                    bool success = false;
+                    using (var rsa = new System.Security.Cryptography.RSACryptoServiceProvider())
+                    {
+                        byte[] bytesToVerify = Encoding.UTF8.GetBytes("Razi");
+                        byte[] signedBytes = signature;
+
+                        rsa.FromXmlString(cert.PublicKey.Key.ToXmlString(false));
+
+                        success = rsa.VerifyData(bytesToVerify, System.Security.Cryptography.CryptoConfig.MapNameToOID("SHA1"), signedBytes);
+
+
+                    }
+
+                    using (var rsa = new System.Security.Cryptography.RSACryptoServiceProvider())
+                    {
+                        byte[] bytesToVerify = Encoding.UTF8.GetBytes("رضی");
+                        byte[] signedBytes = signature;
+
+                        rsa.FromXmlString(cert.PublicKey.Key.ToXmlString(false));
+
+                        
+                        var res = rsa.Encrypt(bytesToVerify, false);
+
+                        var dec = session.Decrypt(session.Factories.MechanismFactory.Create(CKM.CKM_RSA_PKCS), privateKey, res);
+                        var decstring = Encoding.UTF8.GetString(dec);
+                    }
+
+                    //var publicKey = Convert.ToBase64String(cert.GetPublicKey(), Base64FormattingOptions.InsertLineBreaks);
+
+                    //if (oObjCollection.Count > 0)
+                    // foreach (var item6 in oObjCollection)
+                    // {
+                    //     var item2 = oObjCollection[0];
+                    //     var item = oObjCollection[1];
+                    //     var oAttriVal = session.GetAttributeValue(item, new List<CKA>() { CKA.CKA_VALUE, CKA.CKA_ID }).FirstOrDefault();
+                    //     var oResult = oAttriVal.GetValueAsByteArray();
+
+                    //     X509Certificate bcCert = _x509CertificateParser.ReadCertificate(oResult);
+
+                    //     var oAttriVal2 = session.GetAttributeValue(item2, new List<CKA>() { CKA.CKA_VALUE, CKA.CKA_ID }).FirstOrDefault();
+                    //     var oResult2 = oAttriVal2.GetValueAsByteArray();
+
+                    //     X509Certificate bcCert2 = _x509CertificateParser.ReadCertificate(oResult2);
+                    // }
+                }
+            }
+        }
+
         public static void showCerts()
         {
 
-// var signatute = File.ReadAllBytes("sign.p7s");
+            // var signatute = File.ReadAllBytes("sign.p7s");
 
-//                         //System.Security.Cryptography
+            //                         //System.Security.Cryptography
 
-//                         System.Security.Cryptography.Pkcs.SignedCms cms = new System.Security.Cryptography.Pkcs.SignedCms(new System.Security.Cryptography.Pkcs.ContentInfo(Encoding.UTF8.GetBytes("Salams")), detached: true);
-//                         cms.Decode(signatute);
-//                         // This next line throws a CryptographicException if the signature can't be verified
-//                         cms.CheckSignature(true);
+            //                         System.Security.Cryptography.Pkcs.SignedCms cms = new System.Security.Cryptography.Pkcs.SignedCms(new System.Security.Cryptography.Pkcs.ContentInfo(Encoding.UTF8.GetBytes("Salams")), detached: true);
+            //                         cms.Decode(signatute);
+            //                         // This next line throws a CryptographicException if the signature can't be verified
+            //                         cms.CheckSignature(true);
 
-//                         System.Security.Cryptography.Pkcs.SignerInfoCollection signers = cms.SignerInfos;
+            //                         System.Security.Cryptography.Pkcs.SignerInfoCollection signers = cms.SignerInfos;
 
-//                         if (signers.Count == 1)
-//                         {
-//                             var iss = signers[0].Certificate.Subject;
-//                             // probably fail
-//                         }
+            //                         if (signers.Count == 1)
+            //                         {
+            //                             var iss = signers[0].Certificate.Subject;
+            //                             // probably fail
+            //                         }
 
-//                         return;
+            //                         return;
 
             X509CertificateParser _x509CertificateParser = new X509CertificateParser();
 
@@ -185,7 +286,7 @@ namespace pkcs11int
 
                         X509Certificate bcCert = _x509CertificateParser.ReadCertificate(oResult);
 
-  var oAttriVal2 = session.GetAttributeValue(item2, new List<CKA>() { CKA.CKA_VALUE, CKA.CKA_ID }).FirstOrDefault();
+                        var oAttriVal2 = session.GetAttributeValue(item2, new List<CKA>() { CKA.CKA_VALUE, CKA.CKA_ID }).FirstOrDefault();
                         var oResult2 = oAttriVal2.GetValueAsByteArray();
 
                         X509Certificate bcCert2 = _x509CertificateParser.ReadCertificate(oResult2);
@@ -194,7 +295,7 @@ namespace pkcs11int
                         var res = bcCert.CertificateStructure.Subject;
 
                         var cert = new System.Security.Cryptography.X509Certificates.X509Certificate(bcCert.GetEncoded());
-                        var signatute = GenerateSignature(Encoding.UTF8.GetBytes("Salam"), false, bcCert2, new List<X509Certificate>{bcCert,bcCert2});
+                        var signatute = GenerateSignature(Encoding.UTF8.GetBytes("Salam"), false, bcCert2, new List<X509Certificate> { bcCert, bcCert2 });
 
                         File.WriteAllText("file.txt", "Salam");
                         File.WriteAllBytes("sign3.p7s", signatute);
