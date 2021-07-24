@@ -1,0 +1,24 @@
+﻿2021-07-22T17:08:56.2619970Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor1
+2021-07-22T17:08:56.2688030Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor2
+2021-07-22T17:08:56.2691070Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Loading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
+2021-07-22T17:08:56.2893100Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Initialize
+2021-07-22T17:08:59.7398270Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::GetInfo
+2021-07-22T17:08:59.7412440Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose1
+2021-07-22T17:08:59.7461890Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose2
+2021-07-22T17:08:59.7467390Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Unloading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
+2021-07-22T17:09:27.2403400Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor1
+2021-07-22T17:09:27.2455650Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor2
+2021-07-22T17:09:27.2458250Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Loading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
+2021-07-22T17:09:27.2672500Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Initialize
+2021-07-22T17:09:30.7263420Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::GetInfo
+2021-07-22T17:09:30.7285580Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose1
+2021-07-22T17:09:30.7289120Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose2
+2021-07-22T17:09:30.7291790Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Unloading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
+2021-07-22T17:09:41.0293450Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor1
+2021-07-22T17:09:41.0349920Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::ctor2
+2021-07-22T17:09:41.0354580Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Loading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
+2021-07-22T17:09:41.0712020Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Initialize
+2021-07-22T17:09:44.5094440Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::GetInfo
+2021-07-22T17:09:44.5116490Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose1
+2021-07-22T17:09:44.5162130Z - 1 - Debug - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Pkcs11Library(/usr/local/lib/libshuttle_p11v220.dylib)::Dispose2
+2021-07-22T17:09:44.5167470Z - 1 - Info - Net.Pkcs11Interop.HighLevelAPI80.Pkcs11Library - Unloading PKCS#11 library /usr/local/lib/libshuttle_p11v220.dylib
